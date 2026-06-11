@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WMS — Gerador de QR Code & Código de Barras</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="logo-mark">WMS</div>
+  <h1>QR<span>Code</span> Manager</h1>
+  <div class="header-stats">
+    <div><strong id="stat-total">—</strong><br>funcionários</div>
+    <div><strong id="stat-filtered">—</strong><br>exibidos</div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- LEFT PANEL -->
+  <div class="panel-left">
+    <div class="panel-header">
+      <h2>Funcionários</h2>
+      <div class="search-box">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Buscar funcionário...">
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="td-num">#</th>
+            <th>Nome</th>
+            <th>Senha</th>
+            <th style="text-align:right">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr class="loading-row"><td colspan="4">Carregando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="add-form">
+      <h3>+ Adicionar Funcionário</h3>
+      <div class="form-row">
+        <div class="field">
+          <label>Nome</label>
+          <input type="text" id="newNome" placeholder="Nome completo">
+        </div>
+        <div class="field">
+          <label>Senha</label>
+          <input type="text" id="newSenha" placeholder="Senha WMS">
+        </div>
+        <button class="btn-add" onclick="addEmployee()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Adicionar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="panel-right">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('qr', this)">⬛ QR Code</button>
+      <button class="tab-btn" onclick="switchTab('barcode', this)">▌▌▌ Código de Barras</button>
+    </div>
+
+    <div class="qr-content">
+      <div class="qr-empty" id="qrEmpty">
+        <div class="icon">⬛</div>
+        <p>Selecione um funcionário<br>na tabela para gerar os códigos</p>
+      </div>
+
+      <div class="qr-display" id="qrDisplay">
+
+        <!-- TAB QR -->
+        <div class="tab-pane active" id="tab-qr">
+          <div class="qr-employee-name" id="qrName"></div>
+          <div class="qr-employee-badge">WMS — Usuário do Sistema</div>
+          <div class="qr-box"><div id="qrcode"></div></div>
+          <div class="qr-info">
+            <div class="qr-info-row">
+              <span class="qr-info-label">Usuário</span>
+              <span class="qr-info-value" id="qrInfoNome"></span>
+            </div>
+            <div class="qr-info-row">
+              <span class="qr-info-label">Senha</span>
+              <span class="qr-info-value senha" id="qrInfoSenha" onclick="toggleSenha()" title="Clique para revelar"></span>
+            </div>
+          </div>
+          <button class="btn-download" onclick="downloadQR()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Baixar QR Code (PNG)
+          </button>
+        </div>
+
+        <!-- TAB BARCODE -->
+        <div class="tab-pane" id="tab-barcode">
+          <div class="qr-employee-name" id="bcName"></div>
+          <div class="qr-employee-badge">WMS — Código de Barras</div>
+
+          <div class="barcode-format-row">
+            <button class="format-btn active" onclick="setFormat('CODE128', this)">CODE128</button>
+            <button class="format-btn" onclick="setFormat('CODE39', this)">CODE39</button>
+          </div>
+
+          <div style="width:100%">
+            <div class="barcode-section-label">Usuário</div>
+            <div class="barcode-box">
+              <svg id="barcodesvg-nome"></svg>
+              <div class="barcode-label" id="bc-label-nome"></div>
+            </div>
+          </div>
+
+          <div style="width:100%">
+            <div class="barcode-section-label">Senha</div>
+            <div class="barcode-box">
+              <svg id="barcodesvg-senha"></svg>
+              <div class="barcode-label" id="bc-label-senha"></div>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn-download" onclick="downloadBarcode('nome')">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Usuário
+            </button>
+            <button class="btn-download" onclick="downloadBarcode('senha')">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Senha
+            </button>
+          </div>
+
+          <button class="btn-download" style="border-color:var(--accent);color:var(--accent)" onclick="downloadBarcodeAmbos()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Baixar Ambos (PNG único)
+          </button>
+
+          <button class="btn-print" onclick="printBarcodes()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polyline points="6 9 6 2 18 2 18 9"/>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+              <rect x="6" y="14" width="12" height="8"/>
+            </svg>
+            Imprimir Códigos de Barras
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Área de impressão -->
+<div id="print-area" style="display:none">
+  <div class="print-header">
+    <span class="print-wms">WMS</span>
+    <span class="print-name" id="print-emp-name"></span>
+    <span class="print-sub">Credenciais de Acesso ao Sistema</span>
+  </div>
+  <div class="print-block">
+    <div class="print-block-label">Usuário</div>
+    <svg id="print-svg-nome"></svg>
+  </div>
+  <div class="print-block">
+    <div class="print-block-label">Senha</div>
+    <svg id="print-svg-senha"></svg>
+  </div>
+  <div class="print-footer">WMS — Documento gerado automaticamente · Confidencial</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="editModal" onclick="closeModal(event)">
+  <div class="modal">
+    <h3>Editar Funcionário</h3>
+    <input type="hidden" id="editId">
+    <div class="field"><label>Nome</label><input type="text" id="editNome"></div>
+    <div class="field"><label>Senha</label><input type="text" id="editSenha"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-save" onclick="saveEdit()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/script.js"></script> 
+</body>
+</html>
