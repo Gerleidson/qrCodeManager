@@ -151,3 +151,100 @@ tbody td { padding: 12px 16px; font-size: 14px; }
     .print-block svg { width: 100% !important; max-width: 170mm !important; height: auto !important; }
     .print-footer { text-align: center; font-family: Arial, sans-serif; font-size: 7pt; color: #bbb; margin-top: 8mm; border-top: 1px solid #eee; padding-top: 3mm; }
 }
+
+/* === TURNO ADDITIONS === */
+:root {
+  --t1-color: #6366f1;
+  --t2-color: #22c55e;
+  --t3-color: #f59e0b;
+}
+
+.toolbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-btns {
+  display: flex;
+  gap: 4px;
+}
+
+.filter-btn {
+  padding: 6px 13px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: all .15s;
+}
+.filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: #0d0f14; }
+.filter-btn[data-t="T1"].active { background: var(--t1-color); border-color: var(--t1-color); color: #fff; }
+.filter-btn[data-t="T2"].active { background: var(--t2-color); border-color: var(--t2-color); color: #0d0f14; }
+.filter-btn[data-t="T3"].active { background: var(--t3-color); border-color: var(--t3-color); color: #0d0f14; }
+
+.td-turno { width: 60px; }
+.td-usuario { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.turno-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  font-family: 'Space Mono', monospace;
+}
+
+.panel-header {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* form select */
+.field select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+  cursor: pointer;
+}
+.field select:focus { border-color: var(--accent); }
+.field select option { background: var(--surface); }
+
+.field-turno { min-width: 80px; max-width: 90px; }
+
+.form-row { grid-template-columns: 90px 1fr 1fr 1fr auto; }
+
+.header-stats div { text-align: center; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); }
+.header-stats strong { display: block; font-size: 16px; }
+
+/* modal select */
+.modal .field select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+  cursor: pointer;
+}
+.modal .field select:focus { border-color: var(--accent); }

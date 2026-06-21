@@ -17,8 +17,10 @@
   <div class="logo-mark">WMS</div>
   <h1>QR<span>Code</span> Manager</h1>
   <div class="header-stats">
-    <div><strong id="stat-total">—</strong><br>funcionários</div>
-    <div><strong id="stat-filtered">—</strong><br>exibidos</div>
+    <div><strong id="stat-total">—</strong><br>total</div>
+    <div style="color:var(--t1-color)"><strong id="stat-t1" style="color:var(--t1-color)">—</strong><br>turno 1</div>
+    <div style="color:var(--t2-color)"><strong id="stat-t2" style="color:var(--t2-color)">—</strong><br>turno 2</div>
+    <div style="color:var(--t3-color)"><strong id="stat-t3" style="color:var(--t3-color)">—</strong><br>turno 3</div>
   </div>
 </header>
 
@@ -27,35 +29,56 @@
   <!-- LEFT PANEL -->
   <div class="panel-left">
     <div class="panel-header">
-      <h2>Funcionários</h2>
-      <div class="search-box">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-        </svg>
-        <input type="text" id="searchInput" placeholder="Buscar funcionário...">
+      <h2>Colaboradores</h2>
+      <div class="toolbar-right">
+        <div class="filter-btns">
+          <button class="filter-btn active" data-t="TODOS" onclick="setTurno(this)">Todos</button>
+          <button class="filter-btn" data-t="T1" onclick="setTurno(this)">T1</button>
+          <button class="filter-btn" data-t="T2" onclick="setTurno(this)">T2</button>
+          <button class="filter-btn" data-t="T3" onclick="setTurno(this)">T3</button>
+        </div>
+        <div class="search-box">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Buscar colaborador...">
+        </div>
       </div>
     </div>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th class="td-num">#</th>
+            <th class="td-turno">Turno</th>
             <th>Nome</th>
+            <th>Usuário</th>
             <th>Senha</th>
             <th style="text-align:right">Ações</th>
           </tr>
         </thead>
         <tbody id="tableBody">
-          <tr class="loading-row"><td colspan="4">Carregando...</td></tr>
+          <tr class="loading-row"><td colspan="5">Carregando...</td></tr>
         </tbody>
       </table>
     </div>
     <div class="add-form">
-      <h3>+ Adicionar Funcionário</h3>
+      <h3>+ Adicionar Colaborador</h3>
       <div class="form-row">
+        <div class="field field-turno">
+          <label>Turno</label>
+          <select id="newTurno">
+            <option value="T1">T1</option>
+            <option value="T2">T2</option>
+            <option value="T3">T3</option>
+          </select>
+        </div>
         <div class="field">
           <label>Nome</label>
           <input type="text" id="newNome" placeholder="Nome completo">
+        </div>
+        <div class="field">
+          <label>Usuário</label>
+          <input type="text" id="newUsuario" placeholder="nome.usuario">
         </div>
         <div class="field">
           <label>Senha</label>
@@ -79,7 +102,7 @@
     <div class="qr-content">
       <div class="qr-empty" id="qrEmpty">
         <div class="icon">⬛</div>
-        <p>Selecione um funcionário<br>na tabela para gerar os códigos</p>
+        <p>Selecione um colaborador<br>na tabela para gerar os códigos</p>
       </div>
 
       <div class="qr-display" id="qrDisplay">
@@ -183,9 +206,18 @@
 <!-- Modal -->
 <div class="modal-overlay" id="editModal" onclick="closeModal(event)">
   <div class="modal">
-    <h3>Editar Funcionário</h3>
+    <h3>Editar Colaborador</h3>
     <input type="hidden" id="editId">
+    <div class="field">
+      <label>Turno</label>
+      <select id="editTurno">
+        <option value="T1">T1</option>
+        <option value="T2">T2</option>
+        <option value="T3">T3</option>
+      </select>
+    </div>
     <div class="field"><label>Nome</label><input type="text" id="editNome"></div>
+    <div class="field"><label>Usuário</label><input type="text" id="editUsuario"></div>
     <div class="field"><label>Senha</label><input type="text" id="editSenha"></div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
@@ -196,6 +228,6 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="js/script.js"></script> 
+<script src="js/script.js"></script>
 </body>
 </html>
